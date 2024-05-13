@@ -1,4 +1,7 @@
 # Direct Exoplanet Imaging with Tensor Decompositions.
+
+<img align="left" width="33%" src="https://github.com/lwelzel/tide/assets/29613344/c6e89abe-5630-4648-9f64-35e928f222ff">
+
 High-contrast imaging (HCI) is as essential pillar in the search for exoplanets. It relies heavily on advanced image 
 processing techniques to differentiate planetary flux from the coronagraphic point spread function (PSF) of the host 
 star and nuisance components. Angular-spectral differential imaging (ASDI) is a key method to induce diversity in HCI 
