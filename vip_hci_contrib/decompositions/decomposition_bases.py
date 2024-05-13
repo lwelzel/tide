@@ -145,21 +145,19 @@ class AbstractBaseCanonicalPolyadicDecomposition(AbstractBaseTensorDecomposition
             (weights, factors), sparse_component = tld.parafac(tensor, **kwargs)
             psf_model = tl.cp_to_tensor((weights, factors))
         else:
-            shape = tensor.shape
             weights, factors = tld.parafac(
-                tensor,#.view(shape[0], shape[1], -1),
+                tensor,
                 **kwargs)
-            psf_model = tl.cp_to_tensor((weights, factors))#.view(*shape)
+            psf_model = tl.cp_to_tensor((weights, factors))
 
         return psf_model
 
     def _psf_model_tntorch(self, tensor: torch.Tensor, **kwargs) -> torch.Tensor:
-        shape = tensor.shape
         t = tn.Tensor(
-            tensor, #.view(shape[0], shape[1], -1),
+            tensor,
             ranks_cp=kwargs["rank"]
         )
-        psf_model = t.torch()#.view(*shape)
+        psf_model = t.torch()
         return psf_model
 
 
@@ -196,14 +194,12 @@ class AbstractBaseTuckerDecomposition(AbstractBaseTensorDecomposition):
         __ = kwargs.pop("mask", None)
         mask = None
         __ = kwargs.pop("backend", None)
-        shape = tensor.shape
-        # print(f"shape: ({shape[0]}, {shape[1]}, {shape[-2] * shape[-1]})")
         (core, tucker_factors), rec_errors = tld.tucker(
-            tensor.view(shape[0], shape[1], -1),
+            tensor,
             mask=mask, return_errors=True, **kwargs)
         self.rec_errors.append(rec_errors)
 
-        return tl.tucker_to_tensor((core, tucker_factors)).view(*shape)
+        return tl.tucker_to_tensor((core, tucker_factors))
 
     def _psf_model_tntorch(self, tensor: torch.Tensor, **kwargs) -> torch.Tensor:
         t = tn.Tensor(tensor, ranks_tucker=kwargs["rank"])
@@ -302,13 +298,11 @@ class AbstractBaseTensorTrainDecomposition(AbstractBaseTensorDecomposition):
         pass
 
     def _psf_model_tensorly(self, tensor: torch.Tensor, **kwargs) -> torch.Tensor:
-        shape = tensor.shape
-
         factors = tld.tensor_train(
-            tensor.view(shape[0], shape[1], -1), #.view(-1, shape[-2], shape[-1]),  # .view(-1, shape[-2], shape[-1]),  # .view(shape[0], shape[1], -1),
+            tensor,
             rank=kwargs["rank"]
         )
-        tensor = tl.tt_to_tensor(factors).view(*shape)
+        tensor = tl.tt_to_tensor(factors)
 
         return tensor
 
@@ -320,11 +314,10 @@ class AbstractBaseTensorTrainDecomposition(AbstractBaseTensorDecomposition):
             kwargs["rank"] = kwargs["rank"][1:-1]
         assert len(kwargs["rank"]) == N - 1, f"Tucker ranks must be properly given. Got: {kwargs['rank']}"
 
-        shape = tensor.shape
-        t = tn.Tensor(tensor.view(shape[0], shape[1], -1),
+        t = tn.Tensor(tensor,
                       ranks_tt=kwargs["rank"]
                       )
-        tensor = t.torch().view(*shape)
+        tensor = t.torch()
         return tensor
 
 
@@ -335,11 +328,10 @@ class AbstractBaseTensorRingDecomposition(AbstractBaseTensorDecomposition):
     }
 
     def _psf_model(self, tensor: torch.Tensor, **kwargs) -> torch.Tensor:
-        shape = tensor.shape
         factors = tld.tensor_ring(
-            tensor, #.view(shape[0], shape[1], -1),
+            tensor,
             **kwargs)
-        tensor = tl.tr_to_tensor(factors).view(*shape)
+        tensor = tl.tr_to_tensor(factors)
 
         return tensor
 

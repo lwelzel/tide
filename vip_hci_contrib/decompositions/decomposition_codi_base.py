@@ -271,19 +271,7 @@ class STIMModule(torch.nn.Module, CubeTransformMeta):
         if collapse:
             det_map = torch.nanmedian(det_map, dim=0).values
 
-        # inv_map = torch.max(inv_map[~torch.isnan(inv_map)])
-        # inv_map = torch.sqrt(torch.sum(inv_map**2, dim=0)) # .values
         inv_map = torch.max(inv_map, dim=0).values
-
-        # fig, (ax0, ax1) = plt.subplots(1, 2, figsize=(18, 9), constrained_layout=True)
-        #
-        # im = ax0.imshow(det_map.cpu().numpy(), origin="lower")
-        # plt.colorbar(im)
-        #
-        # im = ax1.imshow(inv_map.cpu().numpy(), origin="lower")
-        # plt.colorbar(im)
-        #
-        # plt.show()
 
         norm_det_map = det_map / inv_map
         try:
@@ -311,8 +299,6 @@ class STIMModule(torch.nn.Module, CubeTransformMeta):
         mu = torch.mean(tensor, dim=0)
         sigma = torch.sqrt(torch.var(tensor, dim=0))
 
-        # mask = torch.ne(sigma, 0.)
-
         detection_map = torch.divide(mu, sigma)
 
         sy, sx = detection_map.shape
@@ -339,8 +325,6 @@ class STIMModule(torch.nn.Module, CubeTransformMeta):
         inverse_stim_map = self._vec_forward(counter_rotated_cube)
 
         return inverse_stim_map
-
-
 
 
 def vip_torch_numpy_wrapper(DecompositionClass: Type[torch.nn.Module]) -> Type[torch.nn.Module]:
