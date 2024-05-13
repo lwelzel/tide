@@ -1,0 +1,19 @@
+name: tide
+channels:
+  - defaults
+dependencies:
+  - python=3.9
+  - numpy
+  - cudatoolkit
+  - cuda
+  - pytorch-cuda=11.8
+  - torchvision
+  - pytorch==2.0.0
+  - cupy
+  - kornia
+  - tensorly
+  - tntorch
+  - arviz
+  - matplotlib
+  - scipy
+  - vip_hci
